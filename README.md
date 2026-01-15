@@ -1,2 +1,33 @@
-# deep-learning-daily-journal
-This repository contains detailed daily logs of my deep learning journey, including code implementations, experiment results, and personal reflections on various deep learning concepts and models.
+# 深度学习
+
+## 第一次，纯梯度下降，没有加任何优化器
+
+## 第二次，三种优化器（SGD/Momentum/Adam）之间的对比，发现momentum最后会有回落
+
+## 第三次，加入了学习率衰减（step decay），momentum问题回落问题解决，
+- 但在SGD一直在0.46不变，主要是没有在每个优化器开始前置随机种子。
+- 重要的实验规范：1.固定mini-batch序列，2.至少对每个方法重复多次取平均。
+
+## 第四次，添加了随机种子重置，确保每个优化器使用相同的初始参数和数据顺序，结果符合预期。
+- 更严格的方法是预先生成一个batches = [.....]列表，三种优化器都用同一份batches。
+- 此时，现在的差异更能归因于优化器本身，而不是“刚好抽到了更容易的 batch”
+- 参数确实在调整，可以看到损失函数确实在下降，但分类决策边界没有跨过关键阈值，所以 acc 不变。
+  1. 学习率不合适。
+  2. 现在的初始化尺度（0.01）导致早期信号偏弱。
+
+## 第五次，只修改SGD的lr=0.5,他的效果高度依赖lr
+- 通常SGD配合1.更仔细地lr选择；2.学习率衰减（step/cosine）；3.常常再加 Momentum（变成“SGD+Momentum”）
+
+## 第六次初始化对比（0.01 vs Xavier vs He）
+1. 给 TwoLayerNet 增加一个 init 参数（核心改动）
+2.  新增一个对比初始化的函数（固定优化器，只换 init）
+3.   改 main，让它只跑你想跑的实验
+### 第六次结果
+1.std=0.01明显起步慢，xavier和c3.he起步快很多，且he略优于xavier，
+  - 说明初始化尺度决定了早期信号/梯度能不能顺畅传播。0.01 太小，会导致 logits 初期太接近 0、梯度偏弱，于是 SGD 要花很久才能“推开”决策边界。
+  - 同时，toy太简单，所有差距不大。在更深网络/更难数据上，初始化差距会被放大。
+
+1. 为什么 ReLU 理论上更适合 He，但你这里 Xavier/He 差不多？网络很浅（只有 1 个 ReLU 隐层）且任务很简单
+  - He 的优势主要在“更深的 ReLU 网络”。
+  - 即便 toy 数据简单，训练过程也会有波动。研究里常见的处理：加学习率衰减或者 early stopping（取验证集最优点）
+
