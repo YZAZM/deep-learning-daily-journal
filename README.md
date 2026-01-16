@@ -31,7 +31,7 @@
   - He 的优势主要在“更深的 ReLU 网络”。
   - 即便 toy 数据简单，训练过程也会有波动。研究里常见的处理：加学习率衰减或者 early stopping（取验证集最优点）
 
-## 第6次改动:实现 BatchNorm 层并插入网络
+## 第6次改动:实现 BatchNorm 层并插入网络(5-two_layer_net_min)
 1. 在进行第六次改动之前,对之前的code进行小范围修改。
    - 在run_compare_optimizers()函数中最终打印缩进有问题,将final的统计缩进外层循环。
    - 学习率衰减不要对Adam/Momentum一刀切.修改
@@ -49,7 +49,7 @@
    - 修改在gradient_check()中的batch.
    - 把数值梯度的步长h调小一点。
 
-## 第七次改动加了 BN 后,Momentum/Adam 反而变得更抖？怎么调参让它更稳？
+## 第七次改动加了 BN 后,Momentum/Adam 反而变得更抖？怎么调参让它更稳？(6-two_layer_net_min)
 1. 修改
     -  加了 BN 后，合适的学习率范围变了，而且动量会放大“过冲”。
     - 把 Momentum 的学习率从 0.1 降到 0.03
