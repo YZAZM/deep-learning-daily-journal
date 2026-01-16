@@ -31,3 +31,34 @@
   - He 的优势主要在“更深的 ReLU 网络”。
   - 即便 toy 数据简单，训练过程也会有波动。研究里常见的处理：加学习率衰减或者 early stopping（取验证集最优点）
 
+## 第6次改动:实现 BatchNorm 层并插入网络
+1. 在进行第六次改动之前,对之前的code进行小范围修改。
+   - 在run_compare_optimizers()函数中最终打印缩进有问题,将final的统计缩进外层循环。
+   - 学习率衰减不要对Adam/Momentum一刀切.修改
+   - 在cross_entropy_error()和SoftmaxWithLoss.backward()中对标签形状不够鲁棒,将其强制拉平成1维会更稳
+   - 在twolayernet函数中删除一个没有用处的函数loss_w1
+   - 实现batchnorm的关键改造
+     - BatchNorm/Dropout 都需要一个东西：训练/推理开关 train_flg
+     - 在predict()函数中加入这个开关。
+2. 实现BatchNorm层
+   - 将accuracy()改为推理模式,不然后面加BN/Dropout,评估会抖.predict(x,train_flg = False)
+   - 新增BatchNorm类,和 Affine/ReLU 放一起
+   - 在twolayernet()的初始化中,新增gamma1/beta1参数
+   - 在twolayernet()的初始化中,在layers中插入BatchNorm层
+   - 在twolayernet()的gradient()中,收集gamma1/beta1的梯度
+   - 修改在gradient_check()中的batch.
+   - 把数值梯度的步长h调小一点。
+
+## 第七次改动加了 BN 后,Momentum/Adam 反而变得更抖？怎么调参让它更稳？
+1. 修改
+    -  加了 BN 后，合适的学习率范围变了，而且动量会放大“过冲”。
+    - 把 Momentum 的学习率从 0.1 降到 0.03
+    - 把 Adam 也加衰减，看看能否更稳.注意前面设置的打印adam的lr是固定的,所以不会变动。
+    - 将ADam 的学习率从 0.003 改成 0.003 
+2. 说明
+    - BatchNorm 不是“自动变强”的魔法，它改变了合适的学习率/动量区间；配合学习率衰减，训练会更稳定。
+    - BN + Momentum 需要更小 lr 或衰减？
+        - BN 让每层输入分布在训练中更动态,梯度方向更容易变化,Momentum 的速度项会延续旧方向，容易过冲；因此需要降低 lr 或在后期衰减来稳定收敛。
+    - 衰减后步子变小，后期更像“精修”，更可能把 best 往后推。
+    - 更平滑 ≠ 更好。你把 Adam 的 lr 降太多后,优化变得“太保守”,结果收敛到一个更差的点(final_acc 0.91,loss 0.465)。
+
