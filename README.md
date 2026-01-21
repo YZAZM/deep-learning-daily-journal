@@ -20,8 +20,8 @@
 
 ## 第六次初始化对比（0.01 vs Xavier vs He）(4-two_layer_net_min)
 1. 给 TwoLayerNet 增加一个 init 参数（核心改动）
-2.  新增一个对比初始化的函数（固定优化器，只换 init）
-3.   改 main，让它只跑你想跑的实验
+2. 新增一个对比初始化的函数（固定优化器，只换 init）
+3. 改 main，让它只跑你想跑的实验
 ### 第六次结果
 1.std=0.01明显起步慢，xavier和c3.he起步快很多，且he略优于xavier，
   - 说明初始化尺度决定了早期信号/梯度能不能顺畅传播。0.01 太小，会导致 logits 初期太接近 0、梯度偏弱，于是 SGD 要花很久才能“推开”决策边界。
@@ -65,25 +65,25 @@
 # 深度学习-卷积神经网络
 
 ## CNN第一次(1-SimpleConvNet.py)
-  1.修改
-     1. 先只写 forward + 缓存
-     2. 添加pooling的forwoard
-     3. 添加pooling的backward
-     4. 添加conv的backward
-     5. 添加一个flatten层
-     6.添加simpleconvnet类,test1
-     7.将解析度改为从score直接反转ones,暂时不走lastlayer.
-     8.把“抽查方式”改成更稳定的误差度量
-  2. 结果
-     1. (10, 16, 32, 32)
-     2. (10, 16, 16, 16)
-     3. (10, 16, 32, 32) 0.75
-     4. y:(10, 16, 32, 32);dx: (10, 3, 32, 32);dW: (16, 3, 3, 3);db: (16,)
-     5. (2, 1152) (2, 8, 12, 12)
-     6. W1 partial check max abs diff: 0.000372369200343059
-     7. W1(sum score) partial check max abs diff: 8.503611318383397e-05
-     8. W1(sum score) partial check max relative error: 0.00010282018549844872  
+1. 修改
+  1. 先只写 forward + 缓存
+  2. 添加pooling的forwoard
+  3. 添加pooling的backward
+  4. 添加conv的backward
+  5. 添加一个flatten层
+  6. 添加simpleconvnet类,test1
+  7. 将解析度改为从score直接反转ones,暂时不走lastlayer.
+  8. 把“抽查方式”改成更稳定的误差度量
+2. 结果
+  1. (10, 16, 32, 32)
+  2. (10, 16, 16, 16)
+  3. (10, 16, 32, 32) 0.75
+  4. y:(10, 16, 32, 32);dx: (10, 3, 32, 32);dW: (16, 3, 3, 3);db: (16,)
+  5. (2, 1152) (2, 8, 12, 12)
+  6. W1 partial check max abs diff: 0.000372369200343059
+  7. W1(sum score) partial check max abs diff: 8.503611318383397e-05
+  8. W1(sum score) partial check max relative error: 0.00010282018549844872  
      
 ## CNN第二次修改
-  主要是进行mnist数据的跑通，具体数据来源以及操作过程直接看2-simpleconvnet.py
+- 主要是进行mnist数据的跑通，具体数据来源以及操作过程直接看2-simpleconvnet.py
 
