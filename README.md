@@ -1,4 +1,4 @@
-# 深度学习
+# 深度学习-全连接层神经网络
 
 ## 第一次，纯梯度下降，没有加任何优化器(1-two_layer_net_min)
 
@@ -61,4 +61,29 @@
         - BN 让每层输入分布在训练中更动态,梯度方向更容易变化,Momentum 的速度项会延续旧方向，容易过冲；因此需要降低 lr 或在后期衰减来稳定收敛。
     - 衰减后步子变小，后期更像“精修”，更可能把 best 往后推。
     - 更平滑 ≠ 更好。你把 Adam 的 lr 降太多后,优化变得“太保守”,结果收敛到一个更差的点(final_acc 0.91,loss 0.465)。
+  
+# 深度学习-卷积神经网络
+
+## CNN第一次(1-SimpleConvNet.py)
+  1.修改
+     1. 先只写 forward + 缓存
+     2. 添加pooling的forwoard
+     3. 添加pooling的backward
+     4. 添加conv的backward
+     5. 添加一个flatten层
+     6.添加simpleconvnet类,test1
+     7.将解析度改为从score直接反转ones,暂时不走lastlayer.
+     8.把“抽查方式”改成更稳定的误差度量
+  2. 结果
+     1. (10, 16, 32, 32)
+     2. (10, 16, 16, 16)
+     3. (10, 16, 32, 32) 0.75
+     4. y:(10, 16, 32, 32);dx: (10, 3, 32, 32);dW: (16, 3, 3, 3);db: (16,)
+     5. (2, 1152) (2, 8, 12, 12)
+     6. W1 partial check max abs diff: 0.000372369200343059
+     7. W1(sum score) partial check max abs diff: 8.503611318383397e-05
+     8. W1(sum score) partial check max relative error: 0.00010282018549844872  
+     
+## CNN第二次修改
+  主要是进行mnist数据的跑通，具体数据来源以及操作过程直接看2-simpleconvnet.py
 
