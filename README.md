@@ -65,7 +65,7 @@
 # 深度学习-卷积神经网络
 
 ## CNN第一次(1-SimpleConvNet.py)
-1. 修改
+###  1.修改
   1. 先只写 forward + 缓存
   2. 添加pooling的forwoard
   3. 添加pooling的backward
@@ -74,7 +74,7 @@
   6. 添加simpleconvnet类,test1
   7. 将解析度改为从score直接反转ones,暂时不走lastlayer.
   8. 把“抽查方式”改成更稳定的误差度量
-2. 结果
+### 2.结果
   1. (10, 16, 32, 32)
   2. (10, 16, 16, 16)
   3. (10, 16, 32, 32) 0.75
